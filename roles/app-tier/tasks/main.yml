@@ -1,4 +1,3 @@
-Main role for apps install. 
 ---
 
 - name: Install {{ payload }} for App-tier
