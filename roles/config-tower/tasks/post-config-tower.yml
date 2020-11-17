@@ -1,5 +1,7 @@
 - name: Create Homework Assignment project
-
+##added the project creation below pmo
+  command: |
+    tower-cli project create --name "{{proj_name}}" --description "{{proj_desc}}" --organization "{{org_name}}" --scm-type "git" --scm-url "{{scm_url}}" --scm-branch "{{scm_branch}}"
 
 - name: Machine Credentail to connect to workstation using openstack.pub
   tower_credential:
