@@ -1,17 +1,17 @@
 ---
 # names were present for hint, tasks missing majority of info 
 - name: Fetch Instance Info
-   os_server_info:
+  os_server_info:
     cloud: openstack
-   register: result
+  register: result
 
 - name: Delete instances
-   os_server:
-      cloud: openstack
-      name: "{{ __osp.name }}"
-      state: absent
-   when: __osp.metadata.deployment_name  == 'QA' 
-   loop: "{{ result.openstack_servers }}"
-   loop_control:
-     loop_var: __osp
-     label: "{{ __osp.name }}"   
+  os_server:
+     cloud: openstack
+     name: "{{ __osp.name }}"
+     state: absent
+  when: __osp.metadata.deployment_name  == 'QA' 
+  loop: "{{ result.openstack_servers }}"
+  loop_control:
+    loop_var: __osp
+    label: "{{ __osp.name }}"   
