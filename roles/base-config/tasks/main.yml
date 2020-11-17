@@ -8,7 +8,15 @@
     replace: 'Defaults  !requiretty'
     backup: yes
 
+##pmoses added all below for task completion
+
 - name: enable repos
+  template:
+    src: repos_template.j2
+    dest: /etc/yum.repos.d/3tier-app.repo
  
 - name: install base tools and packages
-
+  package:
+    name:
+      - curl
+    state: latest
