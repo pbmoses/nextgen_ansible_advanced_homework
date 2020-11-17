@@ -1,27 +1,27 @@
 Main role for apps install. 
 ---
 
-  - name: Install {{ payload }} for App-tier
-    package:
-      name:
-        - " {{ payload }}"
-      state: latest
+- name: Install {{ payload }} for App-tier
+  package:
+    name:
+      - " {{ payload }}"
+    state: latest
 
-  - name: Create {{ tomcat_web_root}} directory for {{ payload }} 
-    file:
-      path: "{{ tomcat_web_root }}"
-      state: directory
-      mode: '0755'
+- name: Create {{ tomcat_web_root}} directory for {{ payload }} 
+  file:
+    path: "{{ tomcat_web_root }}"
+    state: directory
+    mode: '0755'
 
-  - name: Put {{ payload }} Configuration in place 
-    template:
-      src: index.html.j2
-      dest: "{{ tomcat_web_root }}/index.html"
-    notify: start {{ payload }}
+- name: Put {{ payload }} Configuration in place 
+  template:
+    src: index.html.j2
+    dest: "{{ tomcat_web_root }}/index.html"
+  notify: start {{ payload }}
 
-  - name: Enable and Start service {{ payload }}
-    service:
-      name: "{{ payload }}"
-      state: started
-      enabled: yes
+- name: Enable and Start service {{ payload }}
+  service:
+    name: "{{ payload }}"
+    state: started
+    enabled: yes
 
