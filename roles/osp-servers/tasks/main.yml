@@ -1,6 +1,10 @@
 ---
 
 # tasks file for osp.servers
+  - name: debug
+    debug:
+      msg: "{{ item.value.name }}  {{item.value.state}} {{item.value.image}} {{item.value.flavor}} {{item.value.key_name}} {{item.value.security_group}} {{item.value.meta[0].group}} {{item.value.meta[0].deployment_name}}" 
+    loop: "{{ osp_servers | dict2items }}"
   - name: Create server instances
     os_server:
       cloud:            "{{ openstack_cloud                           | default('openstack') }}"
@@ -15,17 +19,22 @@
       meta: "group={{ item.value.meta[0].group }},deployment_name={{ item.value.meta[0].deployment_name }}"
       nics:
         - net-name: int_network
-
+        #    - net-name: ext_network
       userdata: |
         #!/bin/bash
         curl -o /tmp/openstack.pub http://www.opentlc.com/download/ansible_bootcamp/openstack_keys/openstack.pub
         cat /tmp/openstack.pub >> /home/cloud-user/.ssh/authorized_keys
-
     loop: "{{ osp_servers | dict2items }}"      
     async: 1200
     poll: 0
     register: r_instances
 
+  - name: Wait for async OSP instance creation to complete
+    async_status: "jid={{ item.ansible_job_id }}"
+    register: r_wait
+    until: r_wait.finished
+    retries: 1200
+    loop: "{{ r_instances.results }}"
 
   - name: Debug Instances Created on OSP
     debug:
@@ -62,4 +71,3 @@
       loop_var: __fip
       label: "{{ __fip.floating_ip.floating_ip_address }}"
     delegate_to: "{{ inventory_hostname }}"
-
